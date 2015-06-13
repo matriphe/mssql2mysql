@@ -1,6 +1,6 @@
 # mssql2mysql #
 
-Simple MSSQL Server to MySQL PHP script converter.
+Simple MSSQL Server to MySQL table converter.
 
 ## Prerequisites ##
 
@@ -38,6 +38,15 @@ Edit the MSSQL and MySQL hostname, user, password, and database. Run the databas
     define('MYSQL_DATABASE','mysql_database');
     ```
 
+3. Run the php script (make sure php is accessible in the path or environment variables)
+
+  `php mssql2mysql.php`
+
 ## Limitations ##
 
-Simple getting tables from MS SQL Server and convert it to MySQL. No indexes, no store procedure, or advanced SQL technique.
+* Just converts tables
+* No indexes
+* No store procedure
+* No triggers
+* No views
+* No Advanced MSSQL features

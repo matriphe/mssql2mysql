@@ -122,11 +122,11 @@ if (!empty($mssql_tables))
 
 					case 'nchar':
 					case 'char':
-						$data_type = 'char'.(!empty($row['CHARACTER_MAXIMUM_LENGTH']) ? '('.$row['CHARACTER_MAXIMUM_LENGTH'].')' : '' );
+						$data_type = 'char'.(!empty($row['CHARACTER_MAXIMUM_LENGTH']) && $row['CHARACTER_MAXIMUM_LENGTH'] > 0 ? '('.$row['CHARACTER_MAXIMUM_LENGTH'].')' : '255' );
 						break;
 					case 'nvarchar':
 					case 'varchar':
-						$data_type = 'varchar'.(!empty($row['CHARACTER_MAXIMUM_LENGTH']) ? '('.$row['CHARACTER_MAXIMUM_LENGTH'].')' : '' );
+						$data_type = 'varchar'.(!empty($row['CHARACTER_MAXIMUM_LENGTH']) && $row['CHARACTER_MAXIMUM_LENGTH'] > 0 ? '('.$row['CHARACTER_MAXIMUM_LENGTH'].')' : '255' );
 						break;
 					case 'ntext':
 					case 'text':

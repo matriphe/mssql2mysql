@@ -20,7 +20,7 @@ Make sure you have [PHP mssql extension](http://php.net/manual/en/book.mssql.php
 
 ## Usage ##
 
-Edit the MSSQL and MySQL *hostname*, *user*, *password*, and *database* section. Run the database from command line using PHP CLI.
+Edit the MSSQL and MySQL *hostname*, *user*, *password*, and *database* section. Run the script from command line using PHP CLI.
 
 #### Example:
 

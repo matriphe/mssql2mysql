@@ -42,30 +42,6 @@ Edit the MSSQL and MySQL hostname, user, password, and database. Run the databas
 
   `php mssql2mysql.php`
 
-## Common errors and fixes
-
-Sometimes you will get an error like:
-
-```
-PHP Warning:  mssql_query(): message: Unicode data in a Unicode-only collation or ntext data cannot be sent to clients using DB-Library (such as ISQL) or ODBC version 3.7 or earlier. (severity 16) in /home/stephen/utils/database/mssql2mysql/mssql2mysql.php on line 181
-```
-
-The easiest fix for users on *nix systems would be to configure `freetds`. Make sure the version is `7.0` not `4.2`:
-
-```
-sudo vim /etc/freetds/freetds.conf`
-
- [global]
-    # TDS protocol version
-    tds version = 7.0
-```
-
-
-Source: [PHP Docs](http://php.net/manual/en/function.mssql-query.php), [StackOverflow](http://stackoverflow.com/questions/5414890/mssql-query-issue-in-php-and-querying-text-data)
-
-
-
-
 ## Limitations ##
 
 * Just converts tables

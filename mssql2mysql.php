@@ -16,6 +16,11 @@ define('MYSQL_PASSWORD','mysql_password');
 define('MYSQL_DATABASE','mysql_database');
 
 /*
+ * SOME HELPER CONSTANT
+ */
+define('CHUNK_SIZE', 1000);
+
+/*
  * STOP EDITING!
  */
 
@@ -200,9 +205,12 @@ if (!empty($mssql_tables))
 							$q = mysql_query($mysql);
 							$numdata += ($q ? 1 : 0 );
 						}
+						if ($numData % CHUNK_SIZE == 0) {
+							echo "===> ".number_format($numdata,0,',','.')." data inserted so far\n";
+						}
 					}
 				}
-				echo "======> ".number_format($numdata,0,',','.')." data inserted\n\n";
+				echo "======> ".number_format($numdata,0,',','.')." data inserted total\n\n";
 			}
 		}
 		$i++;

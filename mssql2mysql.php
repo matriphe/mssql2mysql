@@ -37,9 +37,8 @@ function addTilde($string)
 }
 
 // Connect MS SQL
-$serverName = ".\\MSSQLSERVER2012"; //serverName\instanceName
-$connectionInfo = array( "Database"=>"bf-unsuppliers_org_db", "UID"=>"dbuser", "PWD"=>"Xbp&48q2");
-$conn = sqlsrv_connect( $serverName, $connectionInfo);
+$connectionInfo = array( "Database"=>MSSQL_DATABASE, "UID"=>MSSQL_USER, "PWD"=>MSSQL_PASSWORD);
+$conn = sqlsrv_connect( MSSQL_HOST, $connectionInfo);
 
 if( $conn ) {
      echo "Connection established.<br />";

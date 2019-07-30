@@ -6,7 +6,6 @@ define('MSSQL_HOST','mssql_host');
 define('MSSQL_USER','mssql_user');
 define('MSSQL_PASSWORD','mssql_password');
 define('MSSQL_DATABASE','mssql_database');
-
 /*
  * DESTINATION: MySQL
  */
@@ -46,7 +45,6 @@ if( $conn ) {
      echo "Connection could not be established.<br />";
      die( print_r( sqlsrv_errors(), true));
 }
-
 
 // Connect to MySQL
 $mysql_connect = mysql_connect(MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD) or die("Couldn't connect to MySQL on '".MYSQL_HOST."'' user '".MYSQL_USER."'\n");

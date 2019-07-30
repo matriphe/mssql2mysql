@@ -6,7 +6,6 @@ define('MSSQL_HOST','mssql_host');
 define('MSSQL_USER','mssql_user');
 define('MSSQL_PASSWORD','mssql_password');
 define('MSSQL_DATABASE','mssql_database');
-
 /*
  * DESTINATION: MySQL
  */
@@ -37,59 +36,62 @@ function addTilde($string)
 }
 
 // Connect MS SQL
-$mssql_connect = mssql_connect(MSSQL_HOST, MSSQL_USER, MSSQL_PASSWORD) or die("Couldn't connect to SQL Server on '".MSSQL_HOST."'' user '".MSSQL_USER."'\n");
-echo "=> Connected to Source MS SQL Server on '".MSSQL_HOST."'\n";
+$connectionInfo = array( "Database"=>MSSQL_DATABASE, "UID"=>MSSQL_USER, "PWD"=>MSSQL_PASSWORD);
+$conn = sqlsrv_connect( MSSQL_HOST, $connectionInfo);
 
-// Select MS SQL Database
-$mssql_db = mssql_select_db(MSSQL_DATABASE, $mssql_connect) or die("Couldn't open database '".MSSQL_DATABASE."'\n"); 
-echo "=> Found database '".MSSQL_DATABASE."'\n";
+if( $conn ) {
+     echo "Connection established.<br />";
+}else{
+     echo "Connection could not be established.<br />";
+     die( print_r( sqlsrv_errors(), true));
+}
 
 // Connect to MySQL
 $mysql_connect = mysql_connect(MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD) or die("Couldn't connect to MySQL on '".MYSQL_HOST."'' user '".MYSQL_USER."'\n");
 echo "\n=> Connected to Source MySQL Server on ".MYSQL_HOST."\n";
 
 // Select MySQL Database
-$mssql_db = mysql_select_db(MYSQL_DATABASE, $mysql_connect) or die("Couldn't open database '".MYSQL_DATABASE."'\n"); 
+$sqlsrv_db = mysql_select_db(MYSQL_DATABASE, $mysql_connect) or die("Couldn't open database '".MYSQL_DATABASE."'\n"); 
 echo "=> Found database '".MYSQL_DATABASE."'\n";
 
-$mssql_tables = array();
+$sqlsrv_tables = array();
 
 // Get MS SQL tables
 $sql = "SELECT * FROM sys.Tables;";
-$res = mssql_query($sql);
+$res = sqlsrv_query($conn, $sql);
 echo "\n=> Getting tables..\n";
-while ($row = mssql_fetch_assoc($res))
+while ($row = sqlsrv_fetch_array($res))
 {
-	array_push($mssql_tables, $row['name']);
-	//echo ($row['name'])."\n";
+	array_push($sqlsrv_tables, $row['name']);
+	echo ($row['name'])."\n";
 }
-echo "==> Found ". number_format(count($mssql_tables),0,',','.') ." tables\n\n";
+echo "==> Found ". number_format(count($sqlsrv_tables),0,',','.') ." tables\n\n";
 
 // Get Table Structures
-if (!empty($mssql_tables))
+if (!empty($sqlsrv_tables))
 {
 	$i = 1;
-	foreach ($mssql_tables as $table)
+	foreach ($sqlsrv_tables as $table)
 	{
 		echo '====> '.$i.'. '.$table."\n";
 		echo "=====> Getting info table ".$table." from SQL Server\n";
 
 		$sql = "select * from information_schema.columns where table_name = '".$table."'";
-		$res = mssql_query($sql);
+		$res = sqlsrv_query($conn, $sql);
 
 		if ($res) 
 		{
-			$mssql_tables[$table] = array();
+			$sqlsrv_tables[$table] = array();
 
 			$mysql = "DROP TABLE IF EXISTS `".$table."`";
 			mysql_query($mysql);
 			$mysql = "CREATE TABLE `".$table."`";
 			$strctsql = $fields = array();
 
-			while ($row = mssql_fetch_assoc($res))
+			while ($row = sqlsrv_fetch_array($res))
 			{
 				//print_r($row); echo "\n";
-				array_push($mssql_tables[$table], $row);
+				array_push($sqlsrv_tables[$table], $row);
 
 				switch ($row['DATA_TYPE']) {
 					case 'bit':
@@ -175,8 +177,8 @@ if (!empty($mssql_tables))
 			
 			echo "=====> Getting data from table ".$table." on SQL Server\n";
 			$sql = "SELECT * FROM ".$table;
-			$qres = mssql_query($sql);
-			$numrow = mssql_num_rows($qres);
+			$qres = sqlsrv_query($conn, $sql);
+			$numrow = sqlsrv_num_rows($qres);
 			echo "======> Found ".number_format($numrow,0,',','.')." rows\n";
 
 			if ($qres)
@@ -186,7 +188,7 @@ if (!empty($mssql_tables))
 				if (!empty($fields))
 				{
 					$sfield = array_map('addTilde', $fields);
-					while ($qrow = mssql_fetch_assoc($qres))
+					while ($qrow = sqlsrv_fetch_array($qres))
 					{
 						$datas = array();
 						foreach ($fields as $field) 
@@ -220,5 +222,7 @@ if (!empty($mssql_tables))
 
 echo "Done!\n";
 
-mssql_close($mssql_connect);
+sqlsrv_close($sqlsrv_connect);
 mysql_close($mysql_connect);
+
+?>
